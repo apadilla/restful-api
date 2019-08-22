@@ -35,9 +35,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // TODO 1/2 Load schemans
+const citySchema = require('./schema/city-schema.json');
+//const cityAPISpec = require('./schema/city-api.yaml');
 
-
-
+new OpenAPIValidator(
+	{ apiSpecPath: __dirname + '/schema/city-api.yaml' }
+).install(app);
 
 // Start of workshop
 // TODO 2/2 Copy your routes from workshop02 here
@@ -135,6 +138,7 @@ app.get('/api/city/:cityId',
 // application/x-www.form-urlencoded - body
 app.post(
 	'/api/city',
+	schemaValidator.validate({ body: citySchema }),
 	(req, resp) => {
 		const data = req.body;
 		console.info('>> data: ', data);
